@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dice Roller</title>
+    <style>
+        /* Add your custom CSS styles here */
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+        }
+
+        .input-label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .input-field {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 200px;
+            margin-bottom: 10px;
+        }
+
+        .roll-button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin-top: 10px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .roll-button:hover {
+            background-color: #45a049;
+        }
+
+        .results-section {
+            margin-top: 20px;
+        }
+
+        .results-heading {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .dice-list {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .dice-item {
+            margin-bottom: 5px;
+        }
+
+        .finish-button {
+            background-color: #f44336;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin-top: 10px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .finish-button:hover {
+            background-color: #d32f2f;
+        }
+    </style>
+</head>
+<body>
+    <h1>Dice Roller</h1>
+    <form method="post" action="{% url 'roll_dice' %}">
+        {% csrf_token %}
+        <label for="sides" class="input-label">Number of Sides:</label>
+        <input type="number" id="sides" name="sides" class="input-field" required><br>
+        <label for="num_dice" class="input-label">Number of Dice:</label>
+        <input type="number" id="num_dice" name="num_dice" class="input-field" required><br>
+        <input type="submit" value="Roll" class="roll-button">
+    </form>
+
+    {% if results %}
+        <div class="results-section">
+            <h2 class="results-heading">Results:</h2>
+            <ul class="dice-list">
+                {% for round in results %}
+                    {% for dice_result in round %}
+                        <li class="dice-item">Dice {{ forloop.counter }}: {{ dice_result }}</li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+            <form method="post" action="{% url 'roll_dice' %}">
+                {% csrf_token %}
+                <input type="hidden" name="sides" value="{{ sides }}">
+                <input type="hidden" name="num_dice" value="{{ num_dice }}">
+                <input type="hidden" name="continue" value="n">
+                <input type="submit" value="Finish" class="finish-button">
+            </form>
+        </div>
+    {% endif %}
+</body>
+</html>
