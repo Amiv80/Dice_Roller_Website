@@ -22,8 +22,7 @@ def roll_dice_view(request):
                 dice_result = random.randint(1, sides)
                 current_round.append(dice_result)
             results.append(current_round)
-            if request.POST.get('continue') != 'y':
-                break
-        return render(request, 'dices/roll_dice.html', {'results': results})
+
+            return render(request, 'dices/roll_dice.html', {'results': results})
 
     return render(request, 'dices/roll_dice.html')
