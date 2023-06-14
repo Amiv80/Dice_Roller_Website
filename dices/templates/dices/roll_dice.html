@@ -1,12 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset = "utf-8"/>
-    <title>
-        Dice Roller
-    </title>
-    
-    
+    <meta charset="utf-8">
+    <title>Dice Roller</title>
     <style>
         body {
             display: flex;
@@ -16,55 +12,68 @@
             min-height: 100vh;
             text-align: center;
             background-color: #f2f2f2;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .input-field {
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            width: 200px;
+            margin-bottom: 15px;
+            font-size: 16px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #008000;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
         }
 
         .input-label {
             font-weight: bold;
             margin-bottom: 5px;
-        }
-
-        .input-field {
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            width: 200px;
-            margin-bottom: 10px;
+            color: #4169E1;
+            font-size: 16px;
         }
 
         .results-section {
             background-color: white;
-            padding: 20px;
-            border-radius: 4px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            font-weight: bold; 
-            font-size: larger; 
+            padding: 25px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            font-weight: bold;
+            font-size: 18px;
             margin-top: 20px;
         }
 
         .results-heading {
-            color: #097969;
-            font-size: 18px;
+            color: #4B0082;
+            font-size: 22px;
             font-weight: bold;
             margin-bottom: 10px;
         }
 
         .roll-button {
-            background-color: #4CAF50;
+            background-color: #FF8C00;
             border: none;
-            color: white;
+            color: black;
             padding: 10px 20px;
             text-align: center;
             text-decoration: none;
             display: inline-block;
             font-size: 16px;
+            font-weight: bold;
             margin-top: 10px;
             cursor: pointer;
             border-radius: 4px;
             transition: background-color 0.3s;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
 
         .roll-button:hover {
-            background-color: #45a049;
+            background-color: #DC143C;
         }
 
         .dice-list {
@@ -85,27 +94,27 @@
         <input type="number" id="sides" name="sides" class="input-field" required><br>
         <label for="num_dice" class="input-label">Number of Dice:</label>
         <input type="number" id="num_dice" name="num_dice" class="input-field" required><br>
-        <input type="submit" value="Roll" class="roll-button">
+        <input type="submit" value="Roll Dice" class="roll-button">
     </form>
 
     {% if results %}
-        <div class="results-section">
-            <h2 class="results-heading">Results:</h2>
-            <ul class="dice-list">
-                {% for round in results %}
-                    {% for dice_result in round %}
-                        <li class="dice-item">Dice {{ forloop.counter }}: {{ dice_result }}</li>
-                    {% endfor %}
+    <div class="results-section">
+        <h2 class="results-heading">Results:</h2>
+        <ul class="dice-list">
+            {% for round in results %}
+                {% for dice_result in round %}
+                    <li class="dice-item">Dice {{ forloop.counter }}: {{ dice_result }}</li>
                 {% endfor %}
-            </ul>
-            <form method="post" action="{% url 'roll_dice' %}">
-                {% csrf_token %}
-                <input type="hidden" name="sides" value="{{ sides }}">
-                <input type="hidden" name="num_dice" value="{{ num_dice }}">
-                <input type="hidden" name="roll_again" value="true">
-                <input type="submit" value="Roll Again" class="roll-button">
-            </form>
-        </div>
+            {% endfor %}
+        </ul>
+        <form method="post" action="{% url 'roll_dice' %}">
+            {% csrf_token %}
+            <input type="hidden" name="sides" value="{{ sides }}">
+            <input type="hidden" name="num_dice" value="{{ num_dice }}">
+            <input type="hidden" name="roll_again" value="true">
+            <input type="submit" value="Roll Again" class="roll-button">
+        </form>
+    </div>
     {% endif %}
 </body>
 </html>
