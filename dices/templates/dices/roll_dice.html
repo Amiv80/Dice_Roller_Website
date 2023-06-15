@@ -39,13 +39,15 @@
         }
 
         .results-section {
-            background-color: white;
+            background-color: #f8f8f8;
             padding: 25px;
+            border: 2px solid #4B0082;
             border-radius: 5px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             font-weight: bold;
             font-size: 18px;
             margin-top: 20px;
+            transform: translateZ(0);
         }
 
         .results-heading {
@@ -86,6 +88,7 @@
         }
     </style>
 </head>
+
 <body>
     <h1>Dice Roller</h1>
     <form method="post" action="{% url 'roll_dice' %}">
@@ -117,4 +120,5 @@
     </div>
     {% endif %}
 </body>
+
 </html>
