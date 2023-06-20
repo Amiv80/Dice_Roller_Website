@@ -39,7 +39,7 @@
         }
 
         .results-section {
-            background-color: #f8f8f8;
+            background-color: #fff8b9;
             padding: 25px;
             border: 2px solid #4B0082;
             border-radius: 5px;
@@ -51,7 +51,7 @@
         }
 
         .results-heading {
-            color: #4B0082;
+            color: #1e0082;
             font-size: 22px;
             font-weight: bold;
             margin-bottom: 10px;
@@ -86,39 +86,50 @@
         .dice-item {
             margin-bottom: 5px;
         }
+
+        .box {
+            width: 400px;
+            background-color: #ffffff;
+            border: 3px solid #4B0082;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-top: 20px;
+        }
     </style>
 </head>
 
 <body>
-    <h1>Dice Roller</h1>
-    <form method="post" action="{% url 'roll_dice' %}">
-        {% csrf_token %}
-        <label for="sides" class="input-label">Number of Sides:</label>
-        <input type="number" id="sides" name="sides" class="input-field" required><br>
-        <label for="num_dice" class="input-label">Number of Dice:</label>
-        <input type="number" id="num_dice" name="num_dice" class="input-field" required><br>
-        <input type="submit" value="Roll Dice" class="roll-button">
-    </form>
-
-    {% if results %}
-    <div class="results-section">
-        <h2 class="results-heading">Results:</h2>
-        <ul class="dice-list">
-            {% for round in results %}
-                {% for dice_result in round %}
-                    <li class="dice-item">Dice {{ forloop.counter }}: {{ dice_result }}</li>
-                {% endfor %}
-            {% endfor %}
-        </ul>
+    <div class="box">
+        <h1>Dice Roller</h1>
         <form method="post" action="{% url 'roll_dice' %}">
             {% csrf_token %}
-            <input type="hidden" name="sides" value="{{ sides }}">
-            <input type="hidden" name="num_dice" value="{{ num_dice }}">
-            <input type="hidden" name="roll_again" value="true">
-            <input type="submit" value="Roll Again" class="roll-button">
+            <label for="sides" class="input-label">Number of Sides:</label>
+            <input type="number" id="sides" name="sides" class="input-field" required><br>
+            <label for="num_dice" class="input-label">Number of Dice:</label>
+            <input type="number" id="num_dice" name="num_dice" class="input-field" required><br>
+            <input type="submit" value="Roll Dice" class="roll-button">
         </form>
-    </div>
-    {% endif %}
-</body>
 
+        {% if results %}
+        <div class="results-section">
+            <h2 class="results-heading">Results:</h2>
+            <ul class="dice-list">
+                {% for round in results %}
+                    {% for dice_result in round %}
+                        <li class="dice-item">Dice {{ forloop.counter }}: {{ dice_result }}</li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+            <form method="post" action="{% url 'roll_dice' %}">
+                {% csrf_token %}
+                <input type="hidden" name="sides" value="{{ sides }}">
+                <input type="hidden" name="num_dice" value="{{ num_dice }}">
+                <input type="hidden" name="roll_again" value="true">
+                <input type="submit" value="Roll Again" class="roll-button">
+            </form>
+        </div>
+        {% endif %}
+    </div>
+</body>
 </html>
