@@ -122,7 +122,7 @@
                 <h2 class="results-heading">Number Frequencies:</h2>
                 <ul class="dice-list">
                     {% for number, count in number_counts.items %}
-                        <li class="dice-item">Number {{ number }} appeared {{ count }} times</li>
+                        <li class="dice-item">Number {{ number }} rolled :{{ count }} time(s)</li>
                     {% endfor %}
                 </ul>
                 <form method="post" action="{% url 'roll_dice' %}">
