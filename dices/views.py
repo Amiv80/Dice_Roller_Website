@@ -33,10 +33,14 @@ def roll_dice_view(request):
                 {"error": "Please enter valid integers."},
             )
 
-        results = []
-        for _ in range(num_dice):
-            dice_result = random.randint(1, sides)
-            results.append(dice_result)
+        if num_dice <= sides:
+            results = random.sample(range(1, sides + 1), num_dice)
+        else:
+            return render(
+                request,
+                "dices/roll_dice.html",
+                {"error": "Number of dice cannot exceed the number of sides."},
+            )
 
         number_counts = dict(Counter(results))
         return render(
