@@ -119,12 +119,6 @@
                         <li class="dice-item">Dice {{ forloop.counter }}: {{ dice_result }}</li>
                     {% endfor %}
                 </ul>
-                <h2 class="results-heading">Number Frequencies:</h2>
-                <ul class="dice-list">
-                    {% for number, count in number_counts.items %}
-                        <li class="dice-item">Number {{ number }} rolled: {{ count }} time(s)</li>
-                    {% endfor %}
-                </ul>
                 <form method="post" action="{% url 'roll_dice' %}">
                     {% csrf_token %}
                     <input type="hidden" name="sides" value="{{ sides }}">
