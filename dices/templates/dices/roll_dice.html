@@ -16,10 +16,10 @@
         }
         
         .input-field {
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            width: 200px;
+            padding: 10px;
+            border: 2px solid #009000;
+            border-radius: 10px;
+            width: 150px;
             margin-bottom: 15px;
             font-size: 16px;
             transition: border-color 0.3s, box-shadow 0.3s;
@@ -27,49 +27,47 @@
         
         .input-field:focus {
             outline: none;
-            border-color: #008000;
-            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
+            border-color: #00ad00;
         }
         
         .input-label {
             font-weight: bold;
             margin-bottom: 5px;
-            color: #4169E1;
-            font-size: 16px;
+            color: #2f58d4;
+            font-size: 18px;
         }
         
         .results-section {
             background-color: #fff8b9;
             padding: 25px;
             border: 2px solid #4B0082;
-            border-radius: 5px;
+            border-radius: 10px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             font-weight: bold;
-            font-size: 18px;
+            font-size: 20px;
             margin-top: 20px;
             transform: translateZ(0);
         }
         
         .results-heading {
             color: #1e0082;
-            font-size: 22px;
+            font-size: 24px;
             font-weight: bold;
-            margin-bottom: 10px;
+            margin-top: 5px;
         }
         
         .roll-button {
             background-color: #FF8C00;
             border: none;
             color: black;
-            padding: 10px 20px;
+            padding: 15px 20px;
             text-align: center;
-            text-decoration: none;
             display: inline-block;
-            font-size: 16px;
+            font-size: 18px;
             font-weight: bold;
             margin-top: 10px;
             cursor: pointer;
-            border-radius: 4px;
+            border-radius: 20px;
             transition: background-color 0.3s;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
@@ -79,11 +77,12 @@
         }
         
         .dice-list {
-            list-style-type: none;
-            padding-left: 0;
+            display: flex;
+            flex-wrap: wrap;
         }
         
         .dice-item {
+            flex: 1 0 calc(50% - 10px);
             margin-bottom: 5px;
         }
         
@@ -104,9 +103,9 @@
         <h1>Dice Roller</h1>
         <form method="post" action="{% url 'roll_dice' %}">
             {% csrf_token %}
-            <label for="sides" class="input-label">Number of Sides:</label>
+            <label for="sides" class="input-label">Number of Side(s):</label>
             <input type="number" id="sides" name="sides" class="input-field" required><br>
-            <label for="num_dice" class="input-label">Number of Dice:</label>
+            <label for="num_dice" class="input-label">Number of Dice(s):</label>
             <input type="number" id="num_dice" name="num_dice" class="input-field" required><br>
             <input type="submit" value="Roll Dice" class="roll-button">
         </form>
@@ -114,11 +113,11 @@
         {% if results %}
             <div class="results-section">
                 <h2 class="results-heading">Results:</h2>
-                <ul class="dice-list">
+                <div class="dice-list">
                     {% for dice_result in results %}
-                        <li class="dice-item">Dice {{ forloop.counter }}: {{ dice_result }}</li>
+                        <div class="dice-item">Dice {{ forloop.counter }}: {{ dice_result }}</div>
                     {% endfor %}
-                </ul>
+                </div>
                 <form method="post" action="{% url 'roll_dice' %}">
                     {% csrf_token %}
                     <input type="hidden" name="sides" value="{{ sides }}">
@@ -128,7 +127,6 @@
                 </form>
             </div>
         {% endif %}
-
     </div>
 </body>
 </html>
