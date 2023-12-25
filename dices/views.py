@@ -1,44 +1,32 @@
 from django.shortcuts import render
+from .forms import DiceForm
 import random
-from collections import Counter
 
 
 def roll_dice_view(request):
+    # Check if the request method is POST
     if request.method == "POST":
-        roll_again = request.POST.get("roll_again")
-
-        if roll_again:
-            sides = request.session.get("sides")
-            num_dice = request.session.get("num_dice")
-        else:
-            sides = request.POST.get("sides")
-            num_dice = request.POST.get("num_dice")
-            request.session["sides"] = sides
-            request.session["num_dice"] = num_dice
-
-        if not sides or not num_dice:
+        form = DiceForm(request.POST)
+        # Check if the form is valid
+        if form.is_valid():
+            # If valid, get the number of sides and dice from the form data
+            sides = form.cleaned_data["sides"]
+            num_dice = form.cleaned_data["num_dice"]
+            # Generate a list of random numbers, each between 1 and the number of sides
+            results = [random.randint(1, sides) for _ in range(num_dice)]
+            # Render the template with the form and results
             return render(
                 request,
                 "dices/roll_dice.html",
-                {"error": "Please enter a valid input."},
+                {
+                    "form": form,
+                    "results": results,
+                    "sides": sides,
+                    "num_dice": num_dice,
+                },
             )
-
-        try:
-            sides = int(sides)
-            num_dice = int(num_dice)
-        except ValueError:
-            return render(
-                request,
-                "dices/roll_dice.html",
-                {"error": "Please enter valid integers."},
-            )
-
-        results = [random.randint(1, sides) for _ in range(num_dice)]
-
-        return render(
-            request,
-            "dices/roll_dice.html",
-            {"results": results},
-        )
-
-    return render(request, "dices/roll_dice.html")
+    else:
+        # If the request method is not POST, create a new form
+        form = DiceForm()
+    # Render the template with the form
+    return render(request, "dices/roll_dice.html", {"form": form})

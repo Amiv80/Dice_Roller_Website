@@ -104,9 +104,9 @@
         <form method="post" action="{% url 'roll_dice' %}">
             {% csrf_token %}
             <label for="sides" class="input-label">Number of Side(s):</label>
-            <input type="number" id="sides" name="sides" class="input-field" required><br>
+            <input type="number" id="sides" name="sides" class="input-field" min="1" required><br>
             <label for="num_dice" class="input-label">Number of Dice(s):</label>
-            <input type="number" id="num_dice" name="num_dice" class="input-field" required><br>
+            <input type="number" id="num_dice" name="num_dice" class="input-field" min="1" required><br>
             <input type="submit" value="Roll Dice" class="roll-button">
         </form>
 
