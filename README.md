@@ -27,7 +27,7 @@ Welcome to the Dice Roller Web Application! This project allows users to roll di
    python manage.py runserver
    ```
 
-4. Open your browser and go to `http://127.0.0.1:8000/` to use the application.
+4. The website will be running on `localhost`, so you can access it at the local address in your web browser.
 
 ## Usage
 
