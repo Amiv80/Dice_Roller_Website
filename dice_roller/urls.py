@@ -1,6 +1,7 @@
-from django.urls import path
-from dices.views import roll_dice_view
+from django.contrib import admin
+from django.urls import path, include
 
 urlpatterns = [
-    path('', roll_dice_view, name='roll_dice'),
+    path("admin/", admin.site.urls),
+    path("", include("dices.urls")),
 ]

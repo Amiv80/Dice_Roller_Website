@@ -1,149 +1,203 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dice Roller</title>
     <style>
-        :root {
-            --primary-color: #4B0082;
-            --secondary-color: #FF8C00;
-            --hover-color: #DC143C;
-            --bg-color: #f2f2f2;
-            --text-color: #2f58d4;
-            --form-bg-color: #ffffff;
-            --form-border-color: #009000;
-            --result-bg-color: #fff8b9;
-            --input-focus-color: #00ad00;
-        }
-
+        /* General styles */
         body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f3f4f6;
+            text-align: center;
+            margin: 0;
+            padding: 0;
             display: flex;
-            flex-direction: column;
-            align-items: center;
             justify-content: center;
-            min-height: 100vh;
-            text-align: center;
-            background-color: var(--bg-color);
-            font-family: 'Arial', sans-serif;
+            align-items: center;
+            height: 100vh;
+            color: #333;
+            transition: background-color 0.3s, color 0.3s;
         }
 
-        .box {
-            width: 400px;
-            background-color: var(--form-bg-color);
-            border: 3px solid var(--primary-color);
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            margin-top: 20px;
+        /* Dark mode styles */
+        body.dark-mode {
+            background-color: #1a1a1a;
+            color: #f3f4f6;
         }
 
-        .input-label {
-            font-weight: bold;
-            margin-bottom: 5px;
-            color: var(--text-color);
-            font-size: 18px;
+        /* Light mode styles */
+        body.light-mode {
+            background-color: #f3f4f6;
+            color: #333;
         }
 
-        .input-field {
-            padding: 10px;
-            border: 2px solid var(--form-border-color);
+        h1 {
+            font-size: 2.5em;
+            color: #4A90E2;
+            margin-bottom: 20px;
+        }
+
+        .dice-input {
+            font-size: 1.2em;
+            padding: 15px;
+            width: 300px;
+            margin: 10px 0;
+            border: 2px solid #ddd;
             border-radius: 10px;
-            width: 150px;
-            margin-bottom: 15px;
-            font-size: 16px;
-            transition: border-color 0.3s, box-shadow 0.3s;
-        }
-
-        .input-field:focus {
             outline: none;
-            border-color: var(--input-focus-color);
-            box-shadow: 0 0 5px rgba(0, 173, 0, 0.5);
+            transition: all 0.3s ease;
         }
 
-        .roll-button, .reset-button {
-            background-color: var(--secondary-color);
+        .dice-input:focus {
+            border-color: #4A90E2;
+            box-shadow: 0 0 5px rgba(74, 144, 226, 0.6);
+        }
+
+        .roll-btn {
+            background-color: #4A90E2;
+            color: white;
+            font-size: 1.2em;
+            padding: 12px 30px;
             border: none;
-            color: black;
-            padding: 15px 20px;
-            text-align: center;
-            display: inline-block;
-            font-size: 18px;
-            font-weight: bold;
-            margin-top: 10px;
+            border-radius: 25px;
             cursor: pointer;
-            border-radius: 20px;
-            transition: background-color 0.3s;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease;
         }
 
-        .roll-button:hover, .reset-button:hover {
-            background-color: var(--hover-color);
+        .roll-btn:hover {
+            background-color: #357ABD;
         }
 
-        .results-section {
-            background-color: var(--result-bg-color);
-            padding: 25px;
-            border: 2px solid var(--primary-color);
+        .roll-btn:active {
+            background-color: #1F5B8A;
+        }
+
+        .results {
+            margin-top: 30px;
+            font-size: 1.2em;
+            padding: 20px;
+            background-color: #fff;
             border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            font-weight: bold;
-            font-size: 20px;
-            margin-top: 20px;
-            transform: translateZ(0);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            margin: 20px auto;
+            text-align: left;
+            display: block;
         }
 
-        .results-heading {
-            color: var(--primary-color);
-            font-size: 24px;
-            font-weight: bold;
-            margin-top: 5px;
+        .results p {
+            margin: 10px 0;
         }
 
-        .dice-list {
-            display: flex;
-            flex-wrap: wrap;
+        .results.success {
+            background-color: #eaf7e3;
+            color: #4CAF50;
         }
 
-        .dice-item {
-            flex: 1 0 calc(50% - 10px);
-            margin-bottom: 5px;
+        .results.error {
+            background-color: #f8d7da;
+            color: #d9534f;
+        }
+
+        .mode-toggle-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #4A90E2;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .mode-toggle-btn:hover {
+            background-color: #357ABD;
         }
 
     </style>
 </head>
-
 <body>
-    <div class="box">
-        <h1>Dice Roller</h1>
-        <form method="post" action="{% url 'roll_dice' %}">
+    <div>
+        <h1>Welcome to the Dice Roller!</h1>
+
+        <form method="post">
             {% csrf_token %}
-            <label for="sides" class="input-label">Number of Side(s):</label>
-            <input type="number" id="sides" name="sides" class="input-field" min="1" required><br>
+            
+            <input type="number" name="num_rolls" class="dice-input" placeholder="Enter number of rolls" min="1" value="1" required>
+            
+            <select name="dice_type" id="dice_type" class="dice-input" onchange="toggleCustomDice()" required>
+                <option value="4" {% if dice_type == '4' %} selected {% endif %}>D4</option>
+                <option value="6" {% if dice_type == '6' %} selected {% endif %}>D6</option>
+                <option value="8" {% if dice_type == '8' %} selected {% endif %}>D8</option>
+                <option value="10" {% if dice_type == '10' %} selected {% endif %}>D10</option>
+                <option value="12" {% if dice_type == '12' %} selected {% endif %}>D12</option>
+                <option value="20" {% if dice_type == '20' %} selected {% endif %}>D20</option>
+                <option value="custom" {% if dice_type == 'custom' %} selected {% endif %}>Enter your Dice</option>
+            </select>
 
-            <label for="num_dice" class="input-label">Number of Dice(s):</label>
-            <input type="number" id="num_dice" name="num_dice" class="input-field" min="1" required><br>
+            <input type="number" name="custom_dice" id="custom_dice" class="dice-input" placeholder="Enter custom dice sides (e.g., 30)" style="display:none;" min="1">
 
-            <input type="submit" value="Roll Dice" class="roll-button">
-            <input type="reset" value="Reset" class="reset-button">
+            <input type="text" name="modifier" class="dice-input" placeholder="Enter modifier (e.g., +2)" value="{{ modifier }}"/>
+
+            <button type="submit" class="roll-btn">Roll Dice</button>
         </form>
 
         {% if results %}
-            <div class="results-section">
-                <h2 class="results-heading">Results:</h2>
-                <div class="dice-list">
-                    {% for dice_result in results %}
-                        <div class="dice-item" aria-label="Dice Result {{ forloop.counter }}">Dice {{ forloop.counter }}: {{ dice_result }}</div>
-                    {% endfor %}
-                </div>
-                <form method="post" action="{% url 'roll_dice' %}">
-                    {% csrf_token %}
-                    <input type="hidden" name="sides" value="{{ sides }}">
-                    <input type="hidden" name="num_dice" value="{{ num_dice }}">
-                    <input type="hidden" name="roll_again" value="true">
-                    <input type="submit" value="Roll Again" class="roll-button">
-                </form>
-            </div>
+        <div class="results {% if results.success %} success {% else %} error {% endif %}">
+            <p><strong>Rolls:</strong> {{ results.rolls }}</p>
+            <p><strong>Modifier:</strong> {{ results.modifier }}</p>
+            <p><strong>Total:</strong> {{ results.total }}</p>
+        </div>
         {% endif %}
     </div>
+
+    <button class="mode-toggle-btn" id="mode-toggle" onclick="toggleDarkMode()">Switch to Dark Mode</button>
+
+    <script>
+        // Function to toggle dark mode
+        function toggleDarkMode() {
+            const body = document.body;
+            const currentMode = body.classList.contains('dark-mode') ? 'dark' : 'light';
+            if (currentMode === 'light') {
+                body.classList.remove('light-mode');
+                body.classList.add('dark-mode');
+                localStorage.setItem('theme', 'dark'); // Save theme preference
+                document.getElementById('mode-toggle').textContent = 'Switch to Light Mode';
+            } else {
+                body.classList.remove('dark-mode');
+                body.classList.add('light-mode');
+                localStorage.setItem('theme', 'light'); // Save theme preference
+                document.getElementById('mode-toggle').textContent = 'Switch to Dark Mode';
+            }
+        }
+
+        // Apply saved theme preference on page load
+        window.onload = () => {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+                document.getElementById('mode-toggle').textContent = 'Switch to Light Mode';
+            } else {
+                document.body.classList.add('light-mode');
+                document.getElementById('mode-toggle').textContent = 'Switch to Dark Mode';
+            }
+        };
+
+        // Toggle visibility of the custom dice input based on dropdown selection
+        function toggleCustomDice() {
+            const diceType = document.getElementById('dice_type').value;
+            const customDiceInput = document.getElementById('custom_dice');
+            if (diceType === 'custom') {
+                customDiceInput.style.display = 'block';
+            } else {
+                customDiceInput.style.display = 'none';
+            }
+        }
+
+        window.onload = toggleCustomDice;
+    </script>
 </body>
 </html>
